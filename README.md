@@ -19,7 +19,7 @@ Il progetto include anche un’integrazione con **Flask**, per consentire la con
 ## Tecnologie utilizzate
 - **Python** (per scraping e backend)
 - **BeautifulSoup / Requests** (per lo scraping)
-- **SQL (SQLite o altro DB supportato)** (per il salvataggio dei dati)
+- **SQLAlchemy** (per il salvataggio dei dati)
 - **Flask** (per l’interfaccia web)
 
 ---
