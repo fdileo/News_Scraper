@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %} Statistics {% endblock %}
+
+
+{% block body %}
+
+<div class="container mt-4">
+
+  <!-- Titolo -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-primary">Statistiche Articoli</h2>
+    <span class="badge badge-info p-2">
+      Totale articoli: {{ total }}
+    </span>
+  </div>
+
+  <!-- Grafici -->
+  <div class="row mb-4">
+    <div class="col-md-6 text-center">
+      <h5 class="mb-3">Totale articoli per topic</h5>
+      <img src="{{ url_for('static', filename='images/bar_chart_topic.png') }}" 
+           class="img-fluid img-thumbnail shadow-sm" alt="Grafico articoli per topic">
+    </div>
+    <div class="col-md-6 text-center">
+      <h5 class="mb-3">Totale articoli per data</h5>
+      <img src="{{ url_for('static', filename='images/bar_chart_date.png') }}" 
+           class="img-fluid img-thumbnail shadow-sm" alt="Grafico articoli per date">
+    </div>
+  </div>
+
+  <!-- Form per filtrare articoli per ID -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Filtra articoli per intervallo di ID</h5>
+      <form method="POST" action="{{ url_for('views.statistics') }}" class="form-inline">
+        <div class="form-group mx-sm-3 mb-2">
+          <label for="min" class="sr-only">ID Minimo</label>
+          <input type="number" class="form-control" id="min" name="min" placeholder="Min">
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+          <label for="max" class="sr-only">ID Massimo</label>
+          <input type="number" class="form-control" id="max" name="max" placeholder="Max">
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">
+          <i class="fa fa-filter"></i> Filtra
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Risultati filtro -->
+  {% if filter %}
+    <h4 class="mb-3">Articoli filtrati</h4>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover shadow-sm rounded">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Topic</th>
+            <th scope="col">Abstract</th>
+            <th scope="col">Link</th>
+            <th scope="col">Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for article in filter %}
+          <tr>
+            <td>{{ article.id }}</td>
+            <td><strong>{{ article.topic }}</strong></td>
+            <td>
+              {% if article.abstract and article.abstract|length > 70 %}
+                {{ article.abstract[:70] ~ ' ...' }}
+              {% else %}
+                {{ article.abstract }}
+              {% endif %}
+            </td>
+            <td>
+              {% if article.link %}
+                <a href="{{ article.link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                  Clicca qui
+                </a>
+              {% else %}
+                <span class="text-muted">N/D</span>
+              {% endif %}
+            </td>
+            <td>{{ article.date.strftime('%d-%m-%Y') if article.date else 'N/D' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+  {% endif %}
+
+</div>
+
+{% endblock %}
